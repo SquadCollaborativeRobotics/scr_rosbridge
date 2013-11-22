@@ -14,7 +14,9 @@
   
   // Connecting to ROS.
   var ros = new ROSLIB.Ros({
-    url : 'ws://128.237.196.253:9090'
+    // URL = ip address of the computer running the bot
+	// or use the computer's name.  for example, shawn's computer = ws://shawn-acer-ubuntu:9090
+    url : 'ws://128.237.197.218:9090'
   });
 
   // Listener for Localization of robot
@@ -41,7 +43,7 @@
   <h1>Simple Keyboard Teleop Example</h1>
   <p>Collector Bot Web Page for simple output viewable on static computer</p>
   <div id="Localization Output">
-    <p>No...</p>
+    <a href="examples/keyboardteleop.html">go to program</a>
   </div>
 </body>
 </html>
