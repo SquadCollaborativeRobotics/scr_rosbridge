@@ -60,7 +60,7 @@ KEYBOARDTELEOP.Teleop = function(options) {
     switch (keyCode) {
       case 65:
         // turn left
-        z = 1 * speed;
+        z = 3 * speed;
         break;
       case 87:
         // up
@@ -69,7 +69,7 @@ KEYBOARDTELEOP.Teleop = function(options) {
         break;
       case 68:
         // turn right
-        z = -1 * speed;
+        z = -3 * speed;
         break;
       case 83:
         // down
