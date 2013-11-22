@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+
+<script type="text/javascript" src="../include/EventEmitter2/eventemitter2.js"></script>
+<script type="text/javascript" src="../include/roslibjs/roslib.js"></script>
+
+<script type="text/javascript">
+  /**
+   * Setup all GUI elements when the page is loaded. 
+   */
+  
+  // Connecting to ROS.
+  var ros = new ROSLIB.Ros({
+    url : 'ws://128.237.196.253:9090'
+  });
+
+  // Listener for Localization of robot
+  var loc_listener = new ROSLIB.Topic({
+    ros: ros,
+    name: '/localized',
+    messageType:"std_msgs/Bool",
+  });
+
+  // Subscribe to topic
+  loc_listener.subscribe(function(message){
+    if(message.data){
+        console.log('Robot Successfully Localized!')
+        document.getElementById('Localization Output').firstElementChild.innerHTML = 'Yes!'
+        // Force to only do this once
+        loc_listener.unsubscribe();
+    }
+  });
+
+</script>
+</head>
+
+<body>
+  <h1>Simple Keyboard Teleop Example</h1>
+  <p>Collector Bot Web Page for simple output viewable on static computer</p>
+  <div id="Localization Output">
+    <p>No...</p>
+  </div>
+</body>
+</html>
