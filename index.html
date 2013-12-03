@@ -12,35 +12,72 @@
   /**
    * Setup all GUI elements when the page is loaded. 
    */
+
+  var ros;
+  var teleop;
+  var loc_listener;
+  var safe_publisher;
+  var state_listener;
+  var safe = new ROSLIB.Message({
+    data : 0,
+  });
+
   function init() {
     // Connecting to ROS.
-    var ros = new ROSLIB.Ros({
+    ros = new ROSLIB.Ros({
       url : 'ws://192.168.1.2:9090'
     });
 
     // Initialize the teleop.
-    var teleop = new KEYBOARDTELEOP.Teleop({
+    teleop = new KEYBOARDTELEOP.Teleop({
       ros : ros,
-      topic : '/cmd_vel'
+      topic : '/cmd_vel',
+      on : 0
     });
 
     teleop.scale = 1.0;
+
+    loc_listener = new ROSLIB.Topic({
+      ros : ros,
+      name : '/new_pose',
+      messageType : 'geometry_msgs/PoseStamped'
+    });
+
+    loc_listener.subscribe(function(message){
+      document.getElementByID("localized").innerHTML = "Tag Found!"    
+    });
+
+    safe_publisher = new ROSLIB.Topic({
+      ros : ros,
+      name : '/safe'
+      messageType : 'std_msgs/Bool'
+    });
+
+    state_listener = new ROSLIB.Topic({
+      ros : ros,
+      name : 'goal_state',
+      messageType : 'std_msgs/String'
+    })
+
+    state_listener.subscriber(function(message){
+      document.getElementByID("goal").innerHTML = message.data;
+    });
+
   }
+
+  function safeButton(){
+    safe.data = !safe.data;
+    safe_publisher.publish(safe);
+  }
+
 
 </script>
 </head>
 
 <body onload="init()">
-  <h1>Simple Keyboard Teleop Example</h1>
-  <p>Run the following commands in the terminal then refresh this page. Check the JavaScript
-    console for the output.</p>
-  <ol>
-    <li><tt>roslaunch pr2_gazebo pr2_empty_world.launch</tt></li>
-    <li><tt>roslaunch rosbridge_server rosbridge_websocket.launch</tt></li>
-    <li>Use your arrow keys on your keyboard to move the robot (must have this browser window
-      focused).</li>
-  </ol>
-  <div id="speed-label"></div>
-  <div id="speed-slider"></div>
+  <h1>SCR Web Interface</h1>
+  <button onclick="safeButton()">Safe Mode</button>
+  <p id="localized"> No Tag Found... </p>
+  <p id="goal"></p>
 </body>
 </html>

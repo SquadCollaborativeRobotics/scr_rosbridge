@@ -29,6 +29,7 @@ KEYBOARDTELEOP.Teleop = function(options) {
   var topic = options.topic || '/cmd_vel';
   // permanent throttle
   var throttle = options.throttle || 1.0;
+  var on = options.on || 1;
 
   // used to externally throttle the speed (e.g., from a slider)
   this.scale = 1.0;
@@ -46,6 +47,7 @@ KEYBOARDTELEOP.Teleop = function(options) {
 
   // sets up a key listener on the page used for keyboard teleoperation
   var handleKey = function(keyCode, keyDown) {
+
     // used to check for changes in speed
     var oldX = x;
     var oldY = y;
@@ -98,7 +100,10 @@ KEYBOARDTELEOP.Teleop = function(options) {
         z : z
       }
     });
-    cmdVel.publish(twist);
+    
+    if(on){
+      cmdVel.publish(twist);
+    }
 
     // check for changes
     if (oldX !== x || oldY !== y || oldZ !== z) {
